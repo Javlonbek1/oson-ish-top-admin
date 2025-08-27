@@ -42,11 +42,18 @@ import { GiPathDistance } from "react-icons/gi";
 
 import { GrUserWorker } from "react-icons/gr";
 import { AiFillBook } from "react-icons/ai";
+import { BsThreeDots } from "react-icons/bs";
 
-const InfoItem = ({ icon: Icon, value, color }) => (
+const InfoItem = ({ icon: Icon, value, color, lat, lon }) => (
   <div className="flex text-indigo-500 items-center gap-2 bg-gray-50 rounded-lg p-2">
     <Icon className={`text-${color || "indigo"}-500`} />
     <span className="text-gray-700 lowercase">{value}</span>
+    {
+        lat !== undefined && lon !==undefined ? <div>
+        <span>, lat:{lat}</span>
+        <span>, lon:{lon}</span>
+      </div> : ""
+    }
   </div>
 );
 
@@ -57,6 +64,8 @@ const AnnFilterDetail = () => {
   const queryClient = useQueryClient();
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [reason, setReason] = useState("");
+  const [selectedDetail, setSelectedDetail] = useState(null); // modal uchun
+
 
   useEffect(() => {
     const handlePopState = () => {
@@ -184,7 +193,18 @@ const AnnFilterDetail = () => {
             ] justify-between font-semibold text-gray-700 text-lg border-b pb-2"
             >
               <h2>Status</h2>
-              <InfoItem icon={FaHashtag} value={vacancy.code} />
+              <div className="flex gap-[5px]">
+                <InfoItem icon={FaHashtag} value={vacancy.code} />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedDetail(vacancy);
+                  }}
+                  className="text-gray-600 cursor-pointer rotate-90 hover:text-black"
+                >
+                  <BsThreeDots size={20} />
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3 pt-4">
               <InfoItem
@@ -208,20 +228,19 @@ const AnnFilterDetail = () => {
               {/* Status */}
               <div className="flex items-center gap-3">
                 <span
-                  className={`px-4 py-2 rounded-xl font-semibold shadow text-sm ${
-                    vacancy.annStatus === "WAITING"
+                  className={`px-4 py-2 rounded-xl font-semibold shadow text-sm ${vacancy.annStatus === "WAITING"
                       ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
                       : vacancy.annStatus === "ACCEPTED"
                         ? "bg-green-100 text-green-700 border border-green-300"
                         : "bg-red-100 text-red-700 border border-red-300"
-                  }`}
+                    }`}
                 >
                   {vacancy.annStatus}
                 </span>
               </div>
 
               {/* Buttons */}
-              {vacancy.annStatus === "WAITING"  && (
+              {vacancy.annStatus === "WAITING" && (
                 <div className="flex gap-3">
                   <button
                     onClick={() => acceptMutation.mutate()}
@@ -238,7 +257,7 @@ const AnnFilterDetail = () => {
                 </div>
               )}
 
-{vacancy.annStatus === "ACCEPTED" && (
+              {vacancy.annStatus === "ACCEPTED" && (
                 <div className="flex gap-3">
                   <button
                     onClick={() => setShowRejectModal(true)}
@@ -264,7 +283,9 @@ const AnnFilterDetail = () => {
             </h2>
             <div className="grid grid-cols-1 gap-[5px]">
               <InfoItem icon={MdBusiness} value={vacancy.company} />
-              <InfoItem icon={IoLocationSharp} value={vacancy.address} />
+              <p>
+              <InfoItem icon={IoLocationSharp} lat={vacancy.lat} lon={vacancy.lon} value={vacancy.address} />
+              </p>
               <InfoItem icon={GiPathDistance} value={vacancy.distance} />
               <InfoItem
                 icon={FaMoneyBill}
@@ -288,7 +309,7 @@ const AnnFilterDetail = () => {
                 icon={MdOutlineWorkHistory}
                 value={vacancy.experience}
               />
-              
+
               <InfoItem icon={FaClock} value={`${vacancy.days} days`} />
               <InfoItem
                 icon={FaTransgender}
@@ -302,6 +323,10 @@ const AnnFilterDetail = () => {
               <InfoItem
                 icon={FaGlobe}
                 value={vacancy.isRemote ? "Remote" : "Office"}
+              />
+              <InfoItem
+                icon={FaGlobe}
+                value={vacancy.workTimeType ? "To'liq" : "Qisman"}
               />
               <InfoItem
                 icon={FaUserTie}
@@ -345,11 +370,10 @@ const AnnFilterDetail = () => {
               </div>
 
               <a
-                href={`https://t.me/${
-                  vacancy.telegramUsername
+                href={`https://t.me/${vacancy.telegramUsername
                     ?.replace("https://t.me/", "") // link bo‘lsa, boshini olib tashlaydi
                     ?.replace("@", "") // @ bo‘lsa, olib tashlaydi
-                }`}
+                  }`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -369,6 +393,41 @@ const AnnFilterDetail = () => {
           </h2>
           <p className="description">{vacancy.description}</p>
         </div>
+
+        {/* Modal */}
+        {selectedDetail && (
+          <div
+            className="fixed inset-0 bg-black/20 flex items-center justify-center z-50"
+            onClick={() => setSelectedDetail(null)}
+          >
+            <div
+              className="bg-white rounded-xl shadow-lg w-[75%] max-w-2xl p-6 overflow-y-auto max-h-[90vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-xl font-bold mb-4">E'lon ma'lumotlari</h2>
+
+
+
+              {/* 2 qatorli ma'lumotlar */}
+              <div className="flex flex-wrap gap-[30px]">
+                <p>
+                <b>ID:</b> {selectedDetail.id} <br />
+                </p>
+                <p><b>Pullik:</b> {selectedDetail.paid ? "Ha" : "Yo‘q"}</p>
+                <p><b>Kelishilgan:</b> {selectedDetail.isAgreed ? "Ha" : "Yo‘q"}</p>
+              </div>
+
+              {/* Yopish tugmasi */}
+              <button
+                onClick={() => setSelectedDetail(null)}
+                className="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </>
   );

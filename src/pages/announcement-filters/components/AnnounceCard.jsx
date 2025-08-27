@@ -1,10 +1,14 @@
-import React from "react";
+import React ,  {useState} from "react";
+import { BsThreeDots } from "react-icons/bs";
 import { FaUsers } from "react-icons/fa";
 import { MdWorkHistory } from "react-icons/md";
 import { TbPhonePlus } from "react-icons/tb";
 
 const AnnounceCard = ({ ann, navigate }) => {
+  const [selectedFilter, setSelectedFilter] = useState(null); // modal uchun
+
   return (
+    <>
     <div
       key={ann.id}
       className={`bg-white overflow-hidden relative z-[0] border border-gray-300 rounded-xl shadow-md p-4 flex flex-col gap-3 transition duration-[0.5s] w-full ${
@@ -17,6 +21,15 @@ const AnnounceCard = ({ ann, navigate }) => {
               : "hover:shadow-gray-300"
       }`}
     >
+      <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedFilter(ann);
+          }}
+          className="text-gray-600 absolute top-[10px] right-[5px] cursor-pointer rotate-90 hover:text-black"
+        >
+          <BsThreeDots size={20} />
+        </button>
       {/* Status */}
       <div className="grid grid-cols-2 gap-x-[20px]">
         <span
@@ -107,6 +120,34 @@ const AnnounceCard = ({ ann, navigate }) => {
         </button>
       </div>
     </div>
+  {/* Modal */}
+  {selectedFilter && (
+  <div
+    className="fixed inset-0 bg-black/20 flex z-[201] items-center justify-center z-50"
+    onClick={() => setSelectedFilter(null)}
+  >
+    <div
+      className="bg-white rounded-xl shadow-lg w-[95%] max-w-lg p-6 overflow-y-auto max-h-[90vh]"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2 className="text-xl font-bold mb-4">E'lon ma'lumotlari</h2>
+
+      <p><b>ID:</b> {selectedFilter.id}</p>
+      <p><b>Yaratilgan:</b> {selectedFilter.createdDate}</p>
+      <p><b>Yangilangan:</b> {selectedFilter.updatedDate}</p>
+      <p><b>Tugash sanasi:</b> {selectedFilter.expiredDate || "-"}</p>
+      <p><b>Egasining ID:</b> {selectedFilter.ownerId}</p>
+
+      <button
+        onClick={() => setSelectedFilter(null)}
+        className="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+      >
+        Yopish
+      </button>
+    </div>
+  </div>
+)}
+    </>
   );
 };
 
