@@ -7,6 +7,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaWifi } from "react-icons/fa6";
 import { FaSync } from "react-icons/fa";
 import AddsTable from "./components/AddsTable";
+import { toast } from "react-toastify";
 
 // ===== API =====
 const getAds = async ({ queryKey }) => {
@@ -32,11 +33,10 @@ const updateAdApi = async ({ id, payload }) =>
   axiosInstance.put(`/ads/update/${id}`, payload);
 const deleteAdApi = async (id) => axiosInstance.delete(`/ads/delete/${id}`);
 
-// ===== COMPONENT =====
 const AdsPage = () => {
   const [page, setPage] = useState(1);
   const size = 20;
-  const [filter, setFilter] = useState("ALL"); // API filter
+  const [filter, setFilter] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -44,7 +44,8 @@ const AdsPage = () => {
   const [link, setLink] = useState("");
   const [destination, setDestination] = useState(false);
   const [editingAd, setEditingAd] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // preview modal uchun
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [deleteConfirmAd, setDeleteConfirmAd] = useState(null); // ❗ delete modal uchun
   const modalRef = useRef(null);
 
   const queryClient = useQueryClient();
@@ -72,7 +73,6 @@ const AdsPage = () => {
     mutationFn: async () => {
       let resourcesId = editingAd?.resourcesId;
 
-      // Yangi qo‘shishda rasm majburiy
       if (!editingAd && !file) {
         throw new Error("Rasm majburiy!");
       }
@@ -84,14 +84,12 @@ const AdsPage = () => {
       const payload = {
         resourcesId,
         link,
-        destination, // modal ichidan keladi
+        destination,
       };
 
       if (!editingAd) {
-        // create
         payload.fixedDay = fixedDay;
       } else if (fixedDay !== null) {
-        // edit → agar kiritilgan bo‘lsa yangilanadi
         payload.fixedDay = fixedDay;
       }
 
@@ -110,7 +108,8 @@ const AdsPage = () => {
     mutationFn: deleteAdApi,
     onSuccess: () => {
       queryClient.invalidateQueries(["ads"]);
-      alert("Reklama o'chirildi!");
+      setDeleteConfirmAd(null); // modal yopilsin
+      toast.success("Reklama o`chirildi!")
     },
     onError: (err) => alert("Xatolik: " + err.message),
   });
@@ -129,9 +128,7 @@ const AdsPage = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-      deleteAdMutation.mutate(id);
-    }
+    setDeleteConfirmAd(id); // ❗ confirm modal ochilsin
   };
 
   const closeModal = () => {
@@ -159,11 +156,9 @@ const AdsPage = () => {
 
   // ===== Helper =====
   const isAdActive = (ad) => {
-    if (ad.fixedDay <= 0) return false; // fixedDay 0 yoki manfiy bo‘lsa inactive
-
+    if (ad.fixedDay <= 0) return false;
     const created = new Date(ad.createdDate).getTime();
     const expiresAt = created + ad.fixedDay * 24 * 60 * 60 * 1000;
-
     return Date.now() <= expiresAt;
   };
 
@@ -183,8 +178,7 @@ const AdsPage = () => {
           onClick={() => refetch()}
           className="flex items-center gap-2 bg-red-500 text-white px-6 py-2 rounded-xl shadow hover:bg-red-600 transition"
         >
-          <FaSync className="animate-spin-slow" />
-          Qayta urinib ko‘rish
+          <FaSync className="animate-spin-slow" /> Qayta urinib ko‘rish
         </button>
       </div>
     );
@@ -193,7 +187,7 @@ const AdsPage = () => {
   return (
     <div className="bg-white overflow-hidden rounded-xl p-4">
       {/* Header + Filter */}
-      <div className="flex items-end justify-between  mb-4 gap-2">
+      <div className="flex items-end justify-between mb-4 gap-2">
         <h2 className="text-xl font-semibold">E’lonlar</h2>
         <div className="flex gap-2 items-center">
           <select
@@ -231,28 +225,7 @@ const AdsPage = () => {
         />
       )}
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center gap-3 mt-4 flex-wrap">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
-        >
-          Oldingi
-        </button>
-        <span>
-          {page} / {data?.totalPages || 1}
-        </span>
-        <button
-          disabled={page === (data?.totalPages || 1)}
-          onClick={() => setPage((p) => p + 1)}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
-        >
-          Keyingi
-        </button>
-      </div>
-
-      {/* Modal */}
+      {/* Create/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2">
           <div
@@ -299,16 +272,14 @@ const AdsPage = () => {
             )}
 
             {/* Fixed Day */}
-            {editingAd ? (
-              ""
-            ) : (
+            {!editingAd && (
               <input
                 type="number"
                 value={fixedDay ?? ""}
                 onChange={(e) => setFixedDay(Number(e.target.value))}
                 placeholder="Fixed Day"
                 className="border p-2 w-full mb-3 outline-none"
-                required={!editingAd}
+                required
               />
             )}
 
@@ -343,6 +314,43 @@ const AdsPage = () => {
                 className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
               >
                 Saqlash
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm Modal */}
+      {deleteConfirmAd && (
+        <div
+          onClick={() => setDeleteConfirmAd(null)}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        >
+          <div
+            className="bg-white rounded-lg p-6 w-[90%] max-w-sm relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setDeleteConfirmAd(null)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+            >
+              <AiOutlineClose size={20} />
+            </button>
+            <h3 className="text-lg font-semibold mb-4">
+              Haqiqatdan ham ushbu reklamani o‘chirmoqchimisiz?
+            </h3>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setDeleteConfirmAd(null)}
+                className="px-4 py-2 border rounded cursor-pointer"
+              >
+                Yo‘q
+              </button>
+              <button
+                onClick={() => deleteAdMutation.mutate(deleteConfirmAd)}
+                className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+              >
+                Ha, o‘chirish
               </button>
             </div>
           </div>

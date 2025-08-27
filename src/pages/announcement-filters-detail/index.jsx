@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -41,6 +41,7 @@ import { GiPathDistance } from "react-icons/gi";
 
 
 import { GrUserWorker } from "react-icons/gr";
+import { AiFillBook } from "react-icons/ai";
 
 const InfoItem = ({ icon: Icon, value, color }) => (
   <div className="flex text-indigo-500 items-center gap-2 bg-gray-50 rounded-lg p-2">
@@ -56,6 +57,16 @@ const AnnFilterDetail = () => {
   const queryClient = useQueryClient();
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [reason, setReason] = useState("");
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const status = localStorage.getItem("ann_status") || "ALL";
+      navigate(`/announcements?status=${status}`, { replace: true });
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [navigate]);
 
   const annId = id.split("|")[1];
 
@@ -210,7 +221,7 @@ const AnnFilterDetail = () => {
               </div>
 
               {/* Buttons */}
-              {vacancy.annStatus === "WAITING" && (
+              {vacancy.annStatus === "WAITING"  && (
                 <div className="flex gap-3">
                   <button
                     onClick={() => acceptMutation.mutate()}
@@ -218,6 +229,17 @@ const AnnFilterDetail = () => {
                   >
                     Accept
                   </button>
+                  <button
+                    onClick={() => setShowRejectModal(true)}
+                    className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 shadow hover:shadow-lg hover:scale-105 transition-all duration-200"
+                  >
+                    Reject
+                  </button>
+                </div>
+              )}
+
+{vacancy.annStatus === "ACCEPTED" && (
+                <div className="flex gap-3">
                   <button
                     onClick={() => setShowRejectModal(true)}
                     className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 shadow hover:shadow-lg hover:scale-105 transition-all duration-200"
@@ -259,9 +281,14 @@ const AnnFilterDetail = () => {
             <div className="grid grid-cols-2 gap-1 pt-4">
               <InfoItem icon={MdWork} value={vacancy.annJobTypesName} />
               <InfoItem
+                icon={AiFillBook}
+                value={vacancy.jobName}
+              />
+              <InfoItem
                 icon={MdOutlineWorkHistory}
                 value={vacancy.experience}
               />
+              
               <InfoItem icon={FaClock} value={`${vacancy.days} days`} />
               <InfoItem
                 icon={FaTransgender}
@@ -340,12 +367,7 @@ const AnnFilterDetail = () => {
           <h2 className="font-semibold text-gray-700 text-lg border-b">
             Description
           </h2>
-            {
-              vacancy.description("/").map((el) => (
-                    <p>el</p>
-              ))
-            }
-          
+          <p className="description">{vacancy.description}</p>
         </div>
       </div>
     </>

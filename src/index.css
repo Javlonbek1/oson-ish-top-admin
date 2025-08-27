@@ -4,3 +4,6 @@
   height: max(100vh - 84px);
 }
 
+.description{
+  white-space: pre-line;
+}
