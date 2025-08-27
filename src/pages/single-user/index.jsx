@@ -270,7 +270,7 @@ const UserPage = () => {
               </p>
               <p>
                 <span className="font-medium">Gender:</span>{" "}
-                {user.gender || "-"}
+                {user.gender ? "Erkak" : "Ayol"}
               </p>
               <p>
                 <span className="font-medium">Created Date:</span>{" "}

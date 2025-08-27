@@ -340,10 +340,12 @@ const AnnFilterDetail = () => {
           <h2 className="font-semibold text-gray-700 text-lg border-b">
             Description
           </h2>
-          <InfoItem
-            icon={MdOutlineDescription}
-            value={`${vacancy.description} people`}
-          />
+            {
+              vacancy.description("/").map((el) => (
+                    <p>el</p>
+              ))
+            }
+          
         </div>
       </div>
     </>
