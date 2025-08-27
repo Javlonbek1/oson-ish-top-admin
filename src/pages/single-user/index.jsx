@@ -266,6 +266,18 @@ const UserPage = () => {
                 <span className="font-medium">Balance:</span> {user.balance}
               </p>
               <p>
+                <span className="font-medium">Balance Statusi:</span> {user.balanceStatus}
+              </p>
+              <p>
+                <span className="font-medium">BirthDate:</span> {user.birthDate ? user.birthDate : "-"}
+              </p>
+              <p>
+                <span className="font-medium">avatarResourcesId:</span> {user.avatarResourcesId ? user.avatarResourcesId : "-"}
+              </p>
+              <p>
+                <span className="font-medium">resumeResourcesId:</span> {user.resumeResourcesId ? user.resumeResourcesId : "-"}
+              </p>
+              <p>
                 <span className="font-medium">Language:</span> {user.language}
               </p>
               <p>
