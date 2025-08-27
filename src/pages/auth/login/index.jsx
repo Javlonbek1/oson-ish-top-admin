@@ -38,7 +38,7 @@ const LoginPage = () => {
   return (
     <div
       className="min-h-screen w-full bg-cover bg-center "
-      style={{ backgroundImage: "url('/login-bg.png')" }}
+      style={{ backgroundImage: "url('/login-bg-1.png')" }}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
