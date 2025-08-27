@@ -47,7 +47,7 @@ const AnnounceCard = ({ ann, navigate }) => {
         <div className="flex items-center justify-between">
           {ann.salaryFrom && ann.salaryTo ? (
             <span className="font-semibold text-gray-800">
-              {ann.salaryFrom} - {ann.salaryTo}
+              {ann.salaryFrom} {ann.annSalaryCurrency} - {ann.salaryTo} {ann.annSalaryCurrency}
             </span>
           ) : (
             <span className="text-gray-400 italic">Belgilanmagan</span>
