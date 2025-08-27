@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.res{
+  height: max(100vh - 84px);
+}
+
