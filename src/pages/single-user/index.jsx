@@ -184,7 +184,7 @@ const UserPage = () => {
             </div>
             <div>
               <span className="font-medium">Gender:</span>{" "}
-              {user.gender}
+              {user?.gender ? "Erkak" : "Ayol"}
             </div>
           </div>
 
@@ -282,7 +282,7 @@ const UserPage = () => {
               </p>
               <p>
                 <span className="font-medium">Gender:</span>{" "}
-                {user.gender ? "Erkak" : "Ayol"}
+                {user?.gender ? "Erkak" : "Ayol"}
               </p>
               <p>
                 <span className="font-medium">Created Date:</span>{" "}
