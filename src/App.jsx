@@ -1,21 +1,21 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/auth/login";
-import ProtectedRoutes from "./routes/ProtectedRoutes";
-import PublicRoutes from "./routes/PublicRoutes";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout";
-import Region from "./pages/region";
-import AnnouncementTypes from "./pages/announcement";
+import AdsPage from "./pages/adds";
 import AnnouncementDiscount from "./pages/ann-discount";
-import SaveLastPage from "./routes/SaveLastPage";
+import AnnouncementTypes from "./pages/announcement";
+import AnnouncementsPage from "./pages/announcement-filters";
+import AnnFilterDetail from "./pages/announcement-filters-detail";
 import AreaPage from "./pages/area";
+import LoginPage from "./pages/auth/login";
 import CategoryPage from "./pages/categories";
 import InnerCategoriesPage from "./pages/inner-category";
 import JobTypes from "./pages/job-types";
-import AdsPage from "./pages/adds";
-import UsersPage from "./pages/users";
+import Dashboard from "./pages/dashboard";
+import Region from "./pages/region";
 import UserPage from "./pages/single-user";
-import AnnouncementsPage from "./pages/announcement-filters";
-import AnnFilterDetail from "./pages/announcement-filters-detail";
+import UsersPage from "./pages/users";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import SaveLastPage from "./routes/SaveLastPage";
 
 function App() {
   return (
@@ -36,7 +36,8 @@ function App() {
             </ProtectedRoutes>
           }
         >
-          <Route index element={<Navigate to="/region" replace />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="region" element={<Region />} />
           <Route path="region/:regionId" element={<AreaPage />} />
           <Route path="areas" element={<AreaPage />} />

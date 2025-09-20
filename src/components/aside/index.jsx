@@ -1,19 +1,22 @@
-import { NavLink } from "react-router-dom";
+import { BiCategory } from "react-icons/bi";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GrAnnounce } from "react-icons/gr";
-import { MdOutlinePercent } from "react-icons/md";
-import { PiMapPinSimpleAreaBold } from "react-icons/pi";
-import { BiCategory } from "react-icons/bi";
 import { MdOutlineWorkHistory } from "react-icons/md";
+import { PiMapPinSimpleAreaBold, PiUsersThreeDuotone } from "react-icons/pi";
 import { RiAdvertisementLine } from "react-icons/ri";
-import { PiUsersThreeDuotone } from "react-icons/pi";
 import { SlBriefcase } from "react-icons/sl";
+import { NavLink } from "react-router-dom";
 
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 
 export default function Aside({ open }) {
   const menuItems = [
+    {
+      path: "/dashboard",
+      label: "Dashboard",
+      icon: <FaMapLocationDot size={20} />,
+    },
     {
       path: "/region",
       label: "Viloyatlar",
@@ -69,9 +72,8 @@ export default function Aside({ open }) {
 
   return (
     <aside
-      className={`fixed top-[70px] z-[10] bg-white border-r border-gray-200 h-screen transition-all duration-300 ${
-        open ? "w-[64px]" : "w-[240px]"
-      }`}
+      className={`fixed top-[70px] z-[10] bg-white border-r border-gray-200 h-screen transition-all duration-300 ${open ? "w-[64px]" : "w-[240px]"
+        }`}
     >
       <div className="pt-5 relative z-45">
         <ul className="flex flex-col gap-1 max-h-[85vh] overflow-y-auto px-1">
@@ -82,21 +84,19 @@ export default function Aside({ open }) {
                 data-tooltip-id={open ? `tooltip-${item.path}` : undefined}
                 data-tooltip-content={open ? item.label : undefined}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-2 py-2 rounded-xl transition-colors ${
-                    isActive
-                      ? "bg-blue-600 text-white shadow-lg"
-                      : "text-gray-600 hover:bg-blue-100 hover:text-blue-600"
+                  `flex items-center gap-3 px-2 py-2 rounded-xl transition-colors ${isActive
+                    ? "bg-blue-600 text-white shadow-lg"
+                    : "text-gray-600 hover:bg-blue-100 hover:text-blue-600"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <div
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        isActive
+                      className={`p-1.5 rounded-lg transition-colors ${isActive
                           ? "bg-white text-blue-600"
                           : "text-blue-500 bg-blue-100 group-hover:bg-white group-hover:text-blue-600"
-                      } ${open ? "mx-auto" : ""}`}
+                        } ${open ? "mx-auto" : ""}`}
                     >
                       {item.icon}
                     </div>
@@ -117,3 +117,4 @@ export default function Aside({ open }) {
     </aside>
   );
 }
+

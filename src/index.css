@@ -7,3 +7,34 @@
 .description{
   white-space: pre-line;
 }
+
+/* Dashboard sahifasi uchun global dark fon */
+body.dashboard-dark {
+  background: radial-gradient(1200px 800px at 70% 80%, rgba(34,197,94,.18), transparent 60%),
+              radial-gradient(900px 600px at 10% 10%, rgba(56,189,248,.25), transparent 60%),
+              radial-gradient(1100px 700px at 90% 20%, rgba(99,102,241,.20), transparent 60%),
+              linear-gradient(135deg, #0b1220 0%, #0a0f1d 100%);
+  color-scheme: dark;
+  /* ixtiyoriy: default matn sal ravshanroq bo'lsin */
+  color: #e5e7eb;
+}
+
+/* Oq fonli bloklarni shaffofga o‘tkazamiz (Tailwind `bg-white`) */
+body.dashboard-dark .bg-white,
+body.dashboard-dark [class*="bg-white"] {
+  background-color: transparent !important;
+}
+
+/* Oq/pastel borderlarni darkga moslashtiramiz */
+body.dashboard-dark .border,
+body.dashboard-dark [class*="border-gray"],
+body.dashboard-dark [class*="border-slate-"] {
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* Matn va ikon ranglari juda xira bo'lsa, zaruriy minimum override */
+body.dashboard-dark .text-black,
+body.dashboard-dark [class*="text-gray-800"],
+body.dashboard-dark [class*="text-slate-800"] {
+  color: #e5e7eb !important;
+}
