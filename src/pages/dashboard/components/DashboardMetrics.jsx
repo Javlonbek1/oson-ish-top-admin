@@ -29,7 +29,17 @@ export function percentChange(current, previous) {
     return { pct: Math.abs(pct), dir: pct > 0 ? "up" : pct < 0 ? "down" : "flat" };
 }
 
+const MONTH_LABELS = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"];
+
 export function normalizeMetrics(d = {}) {
+    const months = Array.isArray(d.monthsYear) ? d.monthsYear : [];
+    const monthsYear = Array.from({ length: 12 }).map((_, i) => {
+        const m = months.find((x) => Number(x?.month) === i + 1) || {};
+        const label = m?.label || MONTH_LABELS[i];
+        const count = Number(m?.count) || 0;
+        return { month: i + 1, label, count };
+    });
+
     return {
         today: Number(d.today) || 0,
         yesterday: Number(d.yesterday) || 0,
@@ -39,7 +49,13 @@ export function normalizeMetrics(d = {}) {
         thisMonth: Number(d.thisMonth) || 0,
         lastMonth: Number(d.lastMonth) || 0,
         total: Number(d.total) || 0,
+        monthsYear,
     };
+}
+
+export function buildMonthlyChartData(metrics) {
+    if (!metrics?.monthsYear) return [];
+    return metrics.monthsYear.map((m) => ({ name: m.label, value: Number(m.count) || 0 }));
 }
 
 // ---------- Public default (ensures QueryClientProvider) ----------
@@ -53,7 +69,7 @@ export default function DashboardMetrics(props) {
 }
 
 // ---------- Inner component that actually uses useQuery ----------
-function DashboardMetricsInner({ endpoint = "admin/users/stats", axiosInstance }) {
+function DashboardMetricsInner({ endpoint = "/api/v1/admin/users/stats", axiosInstance }) {
     // Body fonini faqat shu sahifada yoqish/ochish
     // useEffect(() => {
     //     document.body.classList.add("dashboard-dark");
@@ -72,19 +88,7 @@ function DashboardMetricsInner({ endpoint = "admin/users/stats", axiosInstance }
         },
     });
 
-    const chartData = useMemo(() => {
-        const d = metrics;
-        if (!d) return [];
-        return [
-            { name: "Today", value: d.today },
-            { name: "Yesterday", value: d.yesterday },
-            { name: "This week", value: d.thisWeek },
-            { name: "Last week", value: d.lastWeek },
-            { name: "Last 7d", value: d.last7Days },
-            { name: "This month", value: d.thisMonth },
-            { name: "Last month", value: d.lastMonth },
-        ];
-    }, [metrics]);
+    const chartData = useMemo(() => buildMonthlyChartData(metrics), [metrics]);
 
     const deltas = useMemo(() => {
         const d = metrics;
@@ -152,9 +156,8 @@ function DashboardMetricsInner({ endpoint = "admin/users/stats", axiosInstance }
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2 text-white">
                                 <BarChart3 className="h-5 w-5" />
-                                <h2 className="text-lg font-semibold">Umumiy taqqoslash</h2>
+                                <h2 className="text-lg font-semibold">Oylar bo'yicha taqqoslash</h2>
                             </div>
-                            <p className="text-xs text-white/60">So'rov: {endpoint}</p>
                         </div>
                         <div className="h-72">
                             <ResponsiveContainer width="100%" height="100%">
@@ -279,7 +282,7 @@ if (typeof describe !== "undefined") {
         });
         it("flat when both zero", () => {
             const r = percentChange(0, 0);
-            expect(r.dir).toBe("flat");
+            expect(r.dir).toBe(0 ? "flat" : "flat");
             expect(r.pct).toBe(0);
         });
         it("up when previous is 0 and current > 0", () => {
@@ -296,6 +299,22 @@ if (typeof describe !== "undefined") {
             expect(n.yesterday).toBe(2);
             expect(n.total).toBe(9);
             expect(n.thisWeek).toBe(0);
+        });
+        it("builds 12 months with labels and counts", () => {
+            const n = normalizeMetrics({ monthsYear: [{ month: 8, label: "Avgust", count: "132" }, { month: 9, label: "Sentyabr", count: 825 }] });
+            expect(n.monthsYear).toHaveLength(12);
+            expect(n.monthsYear[7].label).toBe("Avgust");
+            expect(n.monthsYear[7].count).toBe(132);
+            expect(n.monthsYear[8].label).toBe("Sentyabr");
+            expect(n.monthsYear[8].count).toBe(825);
+        });
+    });
+
+    describe("buildMonthlyChartData", () => {
+        it("maps monthsYear to recharts data", () => {
+            const chart = buildMonthlyChartData({ monthsYear: [{ label: "Yanvar", count: 1 }, { label: "Fevral", count: 2 }] });
+            expect(chart[0]).toEqual({ name: "Yanvar", value: 1 });
+            expect(chart[1]).toEqual({ name: "Fevral", value: 2 });
         });
     });
 }
