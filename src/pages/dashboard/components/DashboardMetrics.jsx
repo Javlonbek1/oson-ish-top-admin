@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useQuery, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, TrendingDown, RefreshCcw, AlertTriangle, CalendarDays, Sun, Moon, CalendarRange, BarChart3, PieChart, Users } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCcw, AlertTriangle, CalendarDays, Sun, Moon, CalendarRange, BarChart3, PieChart, Users, Download } from "lucide-react";
 
 /**
  * DashboardMetrics.jsx — Provider-safe version (axiosInstance + React Query)
@@ -76,7 +76,67 @@ function DashboardMetricsInner({ endpoint = "/api/v1/admin/users/stats", axiosIn
     //     return () => document.body.classList.remove("dashboard-dark");
     // }, []);
 
+    // axiosInstance dan olingan klient:
     const ax = axiosInstance || (typeof window !== "undefined" && window.axios);
+    const [downloading, setDownloading] = useState(false);
+
+    async function handleExportClick() {
+        if (!ax) return;
+        try {
+            setDownloading(true);
+
+            // MUHIM: baseURL odatda https://api.osonishtop.uz/api/v1
+            // Shuning uchun yo‘lni faqat nisbiy qiling:
+            const path = "admin/users/export.xlsx";
+
+            const res = await ax.get(path, {
+                responseType: "blob",
+                headers: {
+                    // Ba’zi backendlar xlsx uchun aniq Accept talab qiladi
+                    Accept:
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/octet-stream",
+                },
+            });
+
+            // 200 bo‘lmasa, blob ichidan matnni o‘qib, foydali xabar chiqaramiz
+            if (res.status !== 200) {
+                try {
+                    const text = await res.data.text();
+                    throw new Error(text || `Export failed: HTTP ${res.status}`);
+                } catch {
+                    throw new Error(`Export failed: HTTP ${res.status}`);
+                }
+            }
+
+            // Fayl nomini Content-Disposition dan olishga urinamiz
+            const disp =
+                res.headers?.["content-disposition"] ||
+                res.headers?.["Content-Disposition"];
+            let filename = "users-export.xlsx";
+            if (disp) {
+                const m = /filename\\s*=\\s*\"?([^\";]+)\"?/i.exec(disp);
+                if (m?.[1]) filename = decodeURIComponent(m[1]);
+            }
+
+            const blob = new Blob([res.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error(e);
+            alert("Export yuklab olishda xatolik: " + (e?.message || "noma'lum"));
+        } finally {
+            setDownloading(false);
+        }
+    }
+
 
     const { data: metrics, isLoading: loading, error, refetch } = useQuery({
         queryKey: ["users-stats", endpoint],
@@ -128,9 +188,21 @@ function DashboardMetricsInner({ endpoint = "/api/v1/admin/users/stats", axiosIn
                         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
                         <p className="text-sm text-white/70">Bugungi ko'rsatkichlar va o'sish dinamikasi</p>
                     </div>
-                    <Button onClick={() => refetch()} className="gap-2 bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20">
-                        <RefreshCcw className="h-4 w-4" /> Yangilash
-                    </Button>
+                    <div className="flex gap-2">
+                        <div className="flex items-center gap-2">
+                            <Button
+                                onClick={handleExportClick}
+                                className={`gap-2 bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20 ${downloading ? 'opacity-70 pointer-events-none' : ''}`}
+                                title="Export.xlsx"
+                            >
+                                <Download className="h-4 w-4" /> {downloading ? 'Yuklanmoqda...' : 'Export Users'}
+                            </Button>
+
+                            <Button onClick={() => refetch()} className="gap-2 bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20" title="Yangilash">
+                                <RefreshCcw className="h-4 w-4" /> Yangilash
+                            </Button>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Error */}
