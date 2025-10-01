@@ -362,7 +362,7 @@ const AnnFilterDetail = () => {
                 />
               </a>
               <div className="grid grid-cols-2 gap-[5px]">
-                {vacancy.contacts.split(",").map((el) => (
+                {vacancy.contacts && vacancy.contacts.split(",").map((el) => (
                   <a href={`tel:${el}`}>
                     <InfoItem icon={MdWorkHistory} value={el} color="green" />
                   </a>
