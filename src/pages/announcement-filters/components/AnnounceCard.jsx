@@ -68,7 +68,7 @@ const AnnounceCard = ({ ann, navigate }) => {
         </div>
 
         <div>
-          {ann.contacts.split(",")?.map((contact, i) => (
+            {ann.contacts && ann.contacts.split(",")?.map((contact, i) => (
             <span
               key={i}
               className="text-indigo-600 flex items-center gap-1 font-medium cursor-pointer hover:underline"
