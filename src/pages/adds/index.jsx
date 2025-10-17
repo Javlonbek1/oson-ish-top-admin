@@ -8,6 +8,7 @@ import { FaWifi } from "react-icons/fa6";
 import { FaSync } from "react-icons/fa";
 import AddsTable from "./components/AddsTable";
 import { toast } from "react-toastify";
+import { baseURL } from "../../api/path";
 
 // ===== API =====
 const getAds = async ({ queryKey }) => {
@@ -122,7 +123,7 @@ const AdsPage = () => {
     setDestination(ad?.destination ?? false);
     setFile(null);
     setFilePreview(
-      `https://api.osonishtop.uz/api/v1/file/download/${ad.resourcesId}`
+      `${baseURL}/file/download/${ad.resourcesId}`
     );
     setIsModalOpen(true);
   };

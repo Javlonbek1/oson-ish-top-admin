@@ -85,8 +85,6 @@ function DashboardMetricsInner({ endpoint = "/api/v1/admin/users/stats", axiosIn
         try {
             setDownloading(true);
 
-            // MUHIM: baseURL odatda https://api.osonishtop.uz/api/v1
-            // Shuning uchun yo‘lni faqat nisbiy qiling:
             const path = "admin/users/export.xlsx";
 
             const res = await ax.get(path, {

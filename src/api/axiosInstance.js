@@ -1,9 +1,10 @@
 // src/api/axiosInstance.js
 import axios from "axios";
+import { baseURL } from "./path";
 
 const axiosInstance = axios.create({
-  baseURL: "https://api.osonishtop.uz/api/v1", // backend manzil
-  withCredentials: false, // agar cookie ishlatmasang, false bo‘lsin
+  baseURL: baseURL,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

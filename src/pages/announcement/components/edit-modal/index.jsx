@@ -56,6 +56,24 @@ const AnnTypeFormModal = ({
           />
         </div>
 
+        <div className="w-full">
+          <h4
+            className="font-normal text-black text-[15px] mb-2"
+          >
+            Max day
+          </h4>
+          <input
+            type="number"
+            name="maxDay"
+            placeholder="Max day"
+            value={formData.maxDay}
+            onChange={onChange}
+            className="w-full py-[10px] px-[16px] bg-[#F0F2F2] rounded-md border text-[16px] outline-none transition-all duration-200"
+            min={1}
+            required
+          />
+        </div>
+
         <div className="flex justify-end gap-2 mt-4">
           <button
             type="button"

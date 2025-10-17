@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiEdit, FiEye, FiMoreVertical, FiX } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { baseURL } from "../../../api/path";
 
 const AddsTable = ({
   items,
@@ -41,7 +42,7 @@ const AddsTable = ({
             </tr>
           ) : (
             items.map((ad, idx) => {
-              const imgUrl = `https://api.osonishtop.uz/api/v1/file/download/${ad.resourcesId}`;
+              const imgUrl = `${baseURL}/file/download/${ad.resourcesId}`;
               return (
                 <tr
                   key={ad.id}

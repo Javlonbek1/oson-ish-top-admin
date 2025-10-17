@@ -61,6 +61,7 @@ const AnnouncementTypes = () => {
       descriptionEn: "",
       descriptionRu: "",
       pricePerDay: 0,
+      maxDay: 365
     });
     setEditingAnnType(null);
     setShowModal(false);
@@ -70,7 +71,7 @@ const AnnouncementTypes = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "pricePerDay" ? Number(value) : value,
+      [name]: name === "pricePerDay" || name === "maxDay" ? Number(value) : value,
     }));
   };
 
@@ -80,6 +81,7 @@ const AnnouncementTypes = () => {
       descriptionEn: annType.descriptionEn,
       descriptionRu: annType.descriptionRu,
       pricePerDay: annType.pricePerDay || 0,
+      maxDay: annType.maxDay || 365
     });
     setEditingAnnType(annType);
     setShowModal(true);
@@ -144,6 +146,7 @@ const AnnouncementTypes = () => {
               <th className="px-2 py-2">E'lon turi (EN)</th>
               <th className="px-2 py-2">E'lon turi (RU)</th>
               <th className="px-2 py-2">Bir kunlik narxi</th>
+              <th className="px-2 py-2">maksimal kun</th>
               <th className="px-2 py-2">Boshqarish</th>
             </tr>
           </thead>
@@ -165,7 +168,8 @@ const AnnouncementTypes = () => {
                   <td className="px-2 py-2">{annType.nameUz}</td>
                   <td className="px-2 py-2">{annType.nameEn}</td>
                   <td className="px-2 py-2">{annType.nameRu}</td>
-                  <td className="px-2 py-2">{annType.pricePerDay}</td>
+                  <td className="px-2 py-2">{annType.pricePerDay} so'm</td>
+                  <td className="px-2 py-2">{annType.maxDay} kun</td>
                   <td className="px-2 py-2 flex items-center gap-3">
                     {/* Edit */}
                     <button

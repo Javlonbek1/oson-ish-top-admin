@@ -12,6 +12,7 @@ import { MdOutlineMailLock } from "react-icons/md";
 import PaymentHistoryTable from "./PaymentHistoryTable";
 import AnnouncementsPage from "../announcement-filters";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { baseURL } from "../../api/path";
 
 // Get user data
 const useUser = (id) =>
@@ -106,7 +107,7 @@ const UserPage = () => {
   const handleResumeDownload = () => {
     if (!user?.resumeResourcesId) return toast.error("Resume mavjud emas!");
     window.open(
-      `https://api.osonishtop.uz/api/v1/file/download/${user.resumeResourcesId}`,
+      `${baseURL}/file/download/${user.resumeResourcesId}`,
       "_blank"
     );
   };
@@ -146,7 +147,7 @@ const UserPage = () => {
         <div className="w-full lg:w-1/4 flex flex-col items-center justify-between gap-4">
           {user.avatarResourcesId ? (
             <img
-              src={`https://api.osonishtop.uz/api/v1/file/download/${user.avatarResourcesId}`}
+              src={`${baseURL}/file/download/${user.avatarResourcesId}`}
               alt="avatar"
               className="w-48 h-48 rounded-xl object-cover shadow-md"
             />

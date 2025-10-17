@@ -8,6 +8,7 @@ import { IoSearch } from "react-icons/io5";
 import { AiOutlineFile } from "react-icons/ai";
 import { GrFormNextLink, GrFormPreviousLink } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
+import { baseURL } from "../../api/path";
 
 const useUsers = (page = 1, size = 10, search = "") =>
   useQuery({
@@ -161,7 +162,7 @@ const UsersPage = () => {
                     <td className="px-2 py-1">
                       {user.avatarResourcesId ? (
                         <img
-                          src={`https://api.osonishtop.uz/api/v1/file/download/${user.avatarResourcesId}`}
+                          src={`${baseURL}/file/download/${user.avatarResourcesId}`}
                           alt="avatar"
                           className="w-10 h-10 rounded-full object-cover"
                         />

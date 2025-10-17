@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { AiOutlineClose } from "react-icons/ai"; // react-icons dan close icon
 import { MdOutlineImageNotSupported } from "react-icons/md";
+import { baseURL } from "../../../api/path";
 
 export default function ImageGallery({ images }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -27,7 +28,7 @@ export default function ImageGallery({ images }) {
           {images?.map((imgId) => (
             <SwiperSlide key={imgId}>
               <img
-                src={`https://api.osonishtop.uz/api/v1/file/download/${imgId}`}
+                src={`${baseURL}/file/download/${imgId}`}
                 alt="Vacancy"
                 className="w-full h-[250px] object-cover rounded-xl cursor-pointer"
                 onClick={(e) => {
@@ -36,7 +37,7 @@ export default function ImageGallery({ images }) {
                     !e.target.closest(".swiper-button-prev")
                   ) {
                     setSelectedImage(
-                      `https://api.osonishtop.uz/api/v1/file/download/${imgId}`
+                      `${baseURL}/file/download/${imgId}`
                     );
                   }
                 }}
@@ -61,7 +62,7 @@ export default function ImageGallery({ images }) {
         {images?.map((imgId) => (
           <SwiperSlide key={imgId}>
             <img
-              src={`https://api.osonishtop.uz/api/v1/file/download/${imgId}`}
+              src={`${baseURL}/file/download/${imgId}`}
               alt="Vacancy thumb"
               className="w-full h-20 sm:h-24 object-cover rounded-md border cursor-pointer"
             />
