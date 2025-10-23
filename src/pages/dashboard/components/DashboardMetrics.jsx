@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useQuery, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { TrendingUp, TrendingDown, RefreshCcw, AlertTriangle, CalendarDays, Sun, Moon, CalendarRange, BarChart3, PieChart, Users, Download } from "lucide-react";
+import { AlertTriangle, BarChart3, CalendarDays, CalendarRange, Download, Moon, PieChart, RefreshCcw, Sun, TrendingDown, TrendingUp, Users } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import StatsLineChart from "./StatsLineChart";
 
 /**
  * DashboardMetrics.jsx — Provider-safe version (axiosInstance + React Query)
@@ -248,6 +249,8 @@ function DashboardMetricsInner({ endpoint = "/api/v1/admin/users/stats", axiosIn
                         </div>
                     </div>
                 </GlassCard>
+
+                <StatsLineChart axiosInstance={axiosInstance} endpoint={endpoint + "/all"} />
 
                 {/* Detailed grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -5,9 +5,8 @@ export default function SaveLastPage() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname !== "/" && location.pathname !== "/login") {
+    if (location.pathname !== "/" && location.pathname !== "/login")
       localStorage.setItem("lastPath", location.pathname);
-    }
   }, [location]);
 
 
