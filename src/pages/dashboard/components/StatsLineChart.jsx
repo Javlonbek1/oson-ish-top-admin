@@ -63,12 +63,12 @@ function mapApiToSeries(items = []) {
     }));
 
   if (sample?.day !== undefined)
-    return items.map((d) => ({ name: String(d.day), count: Number(d.count) || 0, deleted: Number(d.deleted) || 0 }));
+    return items.map(d => ({ name: String(d.day), count: Number(d.count) || 0, deleted: Number(d.deleted) || 0 }));
 
   if (sample?.hour !== undefined)
-    return items.map((h) => ({ name: String(h.hour), count: Number(h.count) || 0, deleted: Number(h.deleted) || 0 }));
+    return items.map(h => ({ name: String(h.hour), count: Number(h.count) || 0, deleted: Number(h.deleted) || 0 }));
   // fallback
-  return items.map((i) => ({ name: i.label || i.name || "-", count: Number(i.count) || 0, deleted: Number(i.deleted) || 0 }));
+  return items.map(i => ({ name: i.label || i.name || "-", count: Number(i.count) || 0, deleted: Number(i.deleted) || 0 }));
 }
 
 function fmtNumber(n) {

@@ -8,10 +8,12 @@ import AnnFilterDetail from "./pages/announcement-filters-detail";
 import AreaPage from "./pages/area";
 import LoginPage from "./pages/auth/login";
 import CategoryPage from "./pages/categories";
+import Dashboard from "./pages/dashboard";
 import InnerCategoriesPage from "./pages/inner-category";
 import JobTypes from "./pages/job-types";
-import Dashboard from "./pages/dashboard";
 import Region from "./pages/region";
+import SignupBonusDetail from "./pages/signup2/components/signup-bonus/SignupBonusDetail";
+import SignupBonusAdminPage from "./pages/signup2/pages/SignupBonusAdminPage";
 import UserPage from "./pages/single-user";
 import UsersPage from "./pages/users";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
@@ -50,6 +52,9 @@ function App() {
           <Route path="users/:usersId" element={<UserPage />} />
           <Route path="ann-filters" element={<AnnouncementsPage />} />
           <Route path="ann-filters/:id" element={<AnnFilterDetail />} />
+
+          <Route path="/admin/signup-bonus" element={<SignupBonusAdminPage />} />
+          <Route path="/admin/signup-bonus/:id" element={<SignupBonusDetail />} />
 
           {/* Public */}
           <Route

@@ -1,3 +1,5 @@
+import { Dashboard } from "@mui/icons-material";
+import { CardGiftcard } from "@mui/icons-material";
 import { BiCategory } from "react-icons/bi";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GrAnnounce } from "react-icons/gr";
@@ -15,7 +17,7 @@ export default function Aside({ open }) {
     {
       path: "/dashboard",
       label: "Dashboard",
-      icon: <FaMapLocationDot size={20} />,
+      icon: <Dashboard size={20} />,
     },
     {
       path: "/region",
@@ -51,6 +53,11 @@ export default function Aside({ open }) {
       path: "/users",
       label: "Foydalanuvchilar",
       icon: <PiUsersThreeDuotone size={20} />,
+    },
+    {
+      path: "/admin/signup-bonus",
+      label: "Bonuslar",
+      icon: <CardGiftcard size={20} />,
     },
     {
       path: "/ann-filters",

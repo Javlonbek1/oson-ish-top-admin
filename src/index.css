@@ -38,3 +38,16 @@ body.dashboard-dark [class*="text-gray-800"],
 body.dashboard-dark [class*="text-slate-800"] {
   color: #e5e7eb !important;
 }
+
+
+/* Sign up campaign */
+/* index.css yoki App.css */
+
+.btn-logout {
+  background: #1e88e5;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
