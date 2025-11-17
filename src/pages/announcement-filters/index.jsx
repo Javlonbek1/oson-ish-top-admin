@@ -1,15 +1,11 @@
-
-
-
-import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { FaSync, FaWifi } from "react-icons/fa";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FaWifi, FaSync } from "react-icons/fa";
 import axiosInstance from "../../api/axiosInstance";
+import AnnounceCard from "./components/AnnounceCard";
 import PaginationAnn from "./components/PaginationAnn";
 import RejectModal from "./components/RejectModal";
-import AnnounceCard from "./components/AnnounceCard";
-import { BsThreeDots } from "react-icons/bs";
 
 const statusTabs = [
   "ALL",
@@ -232,7 +228,7 @@ const AnnouncementsPage = () => {
             FILTER
           </button>
         </div>
-        
+
       </div>
 
       {/* Filters */}
@@ -312,7 +308,7 @@ const AnnouncementsPage = () => {
         setRejectModal={setRejectModal}
       />
 
-      
+
 
     </div>
   );

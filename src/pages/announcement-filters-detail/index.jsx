@@ -1,55 +1,51 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Thumbs } from "swiper/modules";
+import {
+  FaClock,
+  FaGlobe,
+  FaHashtag,
+  FaMoneyBill,
+  FaMoneyCheck,
+  FaPhone,
+  FaRegBookmark,
+  FaRegEye,
+  FaTelegram,
+  FaTransgender,
+  FaUser,
+  FaUserGraduate,
+  FaUserTie
+} from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import {
-  FaPhone,
-  FaUser,
-  FaMoneyBill,
-  FaClock,
-  FaTelegram,
-  FaTransgender,
-  FaUserGraduate,
-  FaRegEye,
-  FaRegBookmark,
-  FaMapMarkedAlt,
-  FaHashtag,
-  FaUserTie,
-  FaMoneyCheck,
-  FaGlobe,
-} from "react-icons/fa";
 
+import { GiPathDistance } from "react-icons/gi";
+import { IoLocationSharp } from "react-icons/io5";
 import {
-  MdClose,
-  MdWork,
   MdBusiness,
-  MdOutlineWorkHistory,
+  MdClose,
   MdOutlineVerified,
+  MdOutlineWorkHistory,
+  MdWork,
   MdWorkHistory,
 } from "react-icons/md";
-import { IoLocationSharp } from "react-icons/io5";
 import axiosInstance from "./../../api/axiosInstance";
 import GoogleMapView from "./components/AnnDetailMap";
-import VacancyDates from "./components/VacancyDate";
 import ImageGallery from "./components/SwiperImages";
-import { MdOutlineDescription } from "react-icons/md";
-import { GiPathDistance } from "react-icons/gi";
+import VacancyDates from "./components/VacancyDate";
 
 
-import { GrUserWorker } from "react-icons/gr";
 import { AiFillBook } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
+import { Loader2 } from "lucide-react";
 
 const InfoItem = ({ icon: Icon, value, color, lat, lon }) => (
   <div className="flex text-indigo-500 items-center gap-2 bg-gray-50 rounded-lg p-2">
     <Icon className={`text-${color || "indigo"}-500`} />
     <span className="text-gray-700 lowercase">{value}</span>
     {
-        lat !== undefined && lon !==undefined ? <div>
+      lat !== undefined && lon !== undefined ? <div>
         <span>, lat:{lat}</span>
         <span>, lon:{lon}</span>
       </div> : ""
@@ -60,11 +56,12 @@ const InfoItem = ({ icon: Icon, value, color, lat, lon }) => (
 const AnnFilterDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const queryClient = useQueryClient();
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [reason, setReason] = useState("");
   const [selectedDetail, setSelectedDetail] = useState(null); // modal uchun
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
 
 
   useEffect(() => {
@@ -113,6 +110,7 @@ const AnnFilterDetail = () => {
   const acceptMutation = useMutation({
     mutationFn: async () => axiosInstance.post(`/ann/accept/${annId}`),
     onSuccess: () => {
+      setAcceptLoading(false);
       queryClient.invalidateQueries(["vacancyDetail", annId]);
     },
   });
@@ -122,6 +120,7 @@ const AnnFilterDetail = () => {
       axiosInstance.post(`/ann/reject/${annId}?reason=${reason}`),
     onSuccess: () => {
       setShowRejectModal(false);
+      setRejectLoading(false);
       setReason("");
       queryClient.invalidateQueries(["vacancyDetail", annId]);
     },
@@ -168,12 +167,18 @@ const AnnFilterDetail = () => {
                 placeholder="Sababni kiriting..."
                 className="w-full border rounded-lg p-2 mb-4"
               />
-              <button
-                onClick={() => rejectMutation.mutate()}
-                className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
-              >
-                Tasdiqlash
-              </button>
+              {
+                rejectLoading ? <div className="bg-red-600 py-2 rounded-lg">
+                  <Loader2 className="animate-spin w-full " size={20} />
+                </div>
+                  :
+                  <button
+                    onClick={() => { rejectMutation.mutate(); setRejectLoading(true); }}
+                    className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 text-center"
+                  >
+                    Tasdiqlash
+                  </button>
+              }
             </div>
           </div>
         )}
@@ -229,10 +234,10 @@ const AnnFilterDetail = () => {
               <div className="flex items-center gap-3">
                 <span
                   className={`px-4 py-2 rounded-xl font-semibold shadow text-sm ${vacancy.annStatus === "WAITING"
-                      ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
-                      : vacancy.annStatus === "ACCEPTED"
-                        ? "bg-green-100 text-green-700 border border-green-300"
-                        : "bg-red-100 text-red-700 border border-red-300"
+                    ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
+                    : vacancy.annStatus === "ACCEPTED"
+                      ? "bg-green-100 text-green-700 border border-green-300"
+                      : "bg-red-100 text-red-700 border border-red-300"
                     }`}
                 >
                   {vacancy.annStatus}
@@ -242,12 +247,21 @@ const AnnFilterDetail = () => {
               {/* Buttons */}
               {vacancy.annStatus === "WAITING" && (
                 <div className="flex gap-3">
-                  <button
-                    onClick={() => acceptMutation.mutate()}
-                    className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 shadow hover:shadow-lg hover:scale-105 transition-all duration-200"
-                  >
-                    Accept
-                  </button>
+                  {/* <div className="from-green-500 to-green-600 bg-green-600 py-2 rounded-xl px-10">
+                    <Loader2 className="animate-spin w-full " size={20} />
+                  </div> */}
+                  {acceptLoading ?
+                    <div className="from-green-500 to-green-600 bg-green-600 py-2 rounded-xl px-10">
+                      <Loader2 className="animate-spin w-full " size={20} />
+                    </div>
+                    :
+                    <button
+                      onClick={() => { acceptMutation.mutate(); setAcceptLoading(true); }}
+                      className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 shadow hover:shadow-lg hover:scale-105 transition-all duration-200 text-center"
+                    >
+                      Accept
+                    </button>
+                  }
                   <button
                     onClick={() => setShowRejectModal(true)}
                     className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 shadow hover:shadow-lg hover:scale-105 transition-all duration-200"
@@ -284,7 +298,7 @@ const AnnFilterDetail = () => {
             <div className="grid grid-cols-1 gap-[5px]">
               <InfoItem icon={MdBusiness} value={vacancy.company} />
               <p>
-              <InfoItem icon={IoLocationSharp} lat={vacancy.lat} lon={vacancy.lon} value={vacancy.address} />
+                <InfoItem icon={IoLocationSharp} lat={vacancy.lat} lon={vacancy.lon} value={vacancy.address} />
               </p>
               <InfoItem icon={GiPathDistance} value={vacancy.distance} />
               <InfoItem
@@ -371,8 +385,8 @@ const AnnFilterDetail = () => {
 
               <a
                 href={`https://t.me/${vacancy.telegramUsername
-                    ?.replace("https://t.me/", "") // link bo‘lsa, boshini olib tashlaydi
-                    ?.replace("@", "") // @ bo‘lsa, olib tashlaydi
+                  ?.replace("https://t.me/", "") // link bo‘lsa, boshini olib tashlaydi
+                  ?.replace("@", "") // @ bo‘lsa, olib tashlaydi
                   }`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -411,7 +425,7 @@ const AnnFilterDetail = () => {
               {/* 2 qatorli ma'lumotlar */}
               <div className="flex flex-wrap gap-[30px]">
                 <p>
-                <b>ID:</b> {selectedDetail.id} <br />
+                  <b>ID:</b> {selectedDetail.id} <br />
                 </p>
                 <p><b>Pullik:</b> {selectedDetail.paid ? "Ha" : "Yo‘q"}</p>
                 <p><b>Kelishilgan:</b> {selectedDetail.isAgreed ? "Ha" : "Yo‘q"}</p>
