@@ -164,7 +164,7 @@ function Inner({ endpoint = "admin/users/stats/all", axiosInstance }) {
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white"><strong>Grafik</strong></div>
         </div>
-        <div style={{ height: 360 }}>
+        <div style={{ height: 360, color: "#e5e7eb" }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 8, right: 12, left: 8, bottom: 36 }}>
               <CartesianGrid strokeDasharray="4 4" stroke="#ffffff22" />

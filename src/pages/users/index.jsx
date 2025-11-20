@@ -9,17 +9,38 @@ import { AiOutlineFile } from "react-icons/ai";
 import { GrFormNextLink, GrFormPreviousLink } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
 import { baseURL } from "../../api/path";
+import { useCallback } from "react";
+import { useEffect } from "react";
 
-const useUsers = (page = 1, size = 10, search = "") =>
+// const useUsers = (page = 1, size = 10, search = "") =>
+//   useQuery({
+//     queryKey: ["users", page, size, search],
+//     queryFn: async () => {
+//       const res = await axiosInstance.get(
+//         `/admin/users?page=${page}&size=${size}&search=${search}`
+//       );
+//       return res.data.data;
+//     },
+//     keepPreviousData: true,
+//   });
+
+const useUsers = (page = 1, size = 10, search = "", order = "") =>
   useQuery({
-    queryKey: ["users", page, size, search],
+    queryKey: ["users", page, size, search, order],
     queryFn: async () => {
-      const res = await axiosInstance.get(
-        `/admin/users?page=${page}&size=${size}&search=${search}`
-      );
+      // include order param when present
+      const q = new URLSearchParams();
+      q.set("page", page);
+      q.set("size", size);
+      if (search) q.set("search", search);
+      if (order) q.set("order", order);
+
+      const res = await axiosInstance.get(`/admin/users?${q.toString()}`);
       return res.data.data;
     },
     keepPreviousData: true,
+    // optional: staleTime, cacheTime etc for better UX
+    staleTime: 1000 * 10,
   });
 
 const useDeleteUser = () => {
@@ -41,14 +62,29 @@ const UsersPage = () => {
   const [page, setPage] = useState(0); // API page 0-based
   const [size] = useState(10);
 
+  const onChangeOrder = useCallback((ord) => {
+    setPage(0);
+    setOrder(ord);
+  }, []);
+
   // 🔑 yangi qo‘shildi
   const [searchInput, setSearchInput] = useState(""); // input uchun
   const [search, setSearch] = useState(""); // API uchun
+  const [order, setOrder] = useState('CREATED_DATE_DESC' || "");
 
   const [selectedUser, setSelectedUser] = useState(null); // modal uchun
 
-  const { data, isLoading, isError, refetch } = useUsers(page + 1, size, search); // API 1-based
+  const { data, isLoading, isError, refetch } = useUsers(page + 1, size, search, order); // API 1-based
   const { mutate: deleteUser } = useDeleteUser();
+
+  useEffect(() => {
+    onChangeOrder(order);
+  }, [order, onChangeOrder]);
+
+  const setBalanceAsc = useCallback(() => setOrder((o) => (o === "BALANCE_ASC" ? "" : "BALANCE_ASC")), []);
+  const setBalanceDesc = useCallback(() => setOrder((o) => (o === "BALANCE_DESC" ? "" : "BALANCE_DESC")), []);
+  const setCreatedDesc = useCallback(() => setOrder((o) => (o === "CREATED_DATE_DESC" ? "" : "CREATED_DATE_DESC")), []);
+
 
   if (isLoading)
     return (
@@ -119,6 +155,35 @@ const UsersPage = () => {
         </div>
       </div>
 
+      <div className="flex items-center gap-2 ml-2">
+        <button
+          onClick={setBalanceAsc}
+          className={`px-3 py-1 rounded text-sm border ${order === "BALANCE_ASC" ? "bg-green-50 border-green-400 text-green-700" : "bg-white border-gray-200"
+            }`}
+          title="Balance ascending"
+        >
+          Balance ↑
+        </button>
+
+        <button
+          onClick={setBalanceDesc}
+          className={`px-3 py-1 rounded text-sm border ${order === "BALANCE_DESC" ? "bg-green-50 border-green-400 text-green-700" : "bg-white border-gray-200"
+            }`}
+          title="Balance descending"
+        >
+          Balance ↓
+        </button>
+
+        <button
+          onClick={setCreatedDesc}
+          className={`px-3 py-1 rounded text-sm border ${order === "CREATED_DATE_DESC" ? "bg-blue-50 border-blue-400 text-blue-700" : "bg-white border-gray-200"
+            }`}
+          title="Newest first"
+        >
+          Newest
+        </button>
+      </div>
+
       {/* Table */}
       <div className="overflow-auto max-h-[550px] md:max-h-[60vh]">
         <table className="min-w-full table-auto text-sm whitespace-nowrap">
@@ -175,7 +240,7 @@ const UsersPage = () => {
                     <td className="px-2 py-2">{user.birthDate || "-"}</td>
                     <td className="px-2 py-2">{user.balance}</td>
                     <td className="px-2 py-2">
-                      {user.isEnabled ? (
+                      {user.phone.length < 10 || !user.isEnabled ? (
                         <span className="text-green-600 font-semibold">Active</span>
                       ) : (
                         <span className="text-red-600 font-semibold">Inactive</span>
@@ -209,7 +274,7 @@ const UsersPage = () => {
                     </td>
                   </tr>
                 ))
-              
+
             )}
           </tbody>
         </table>
