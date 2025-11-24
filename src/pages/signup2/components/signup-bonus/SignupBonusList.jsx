@@ -77,9 +77,8 @@ export default function SignupBonusList() {
                             <TableCell>Promo</TableCell>
                             <TableCell>Miqdor</TableCell>
                             <TableCell>Faol</TableCell>
-                            <TableCell>Boshlanish</TableCell>
-                            <TableCell>Tugash</TableCell>
                             <TableCell>Yaratilgan</TableCell>
+                            <TableCell>Tugash</TableCell>
                             <TableCell>Harakatlar</TableCell>
                         </TableRow>
                     </TableHead>
@@ -91,9 +90,8 @@ export default function SignupBonusList() {
                                 <TableCell>{c.promoCode || '-'}</TableCell>
                                 <TableCell>{formatAmount(c.amountMinor)}</TableCell>
                                 <TableCell>{c.isActive ? 'Ha' : 'Yo‘q'}</TableCell>
-                                <TableCell>{formatDate(c.startDate)}</TableCell>
-                                <TableCell>{c.endDate ? formatDate(c.endDate) : '-'}</TableCell>
                                 <TableCell>{formatDate(c.createdDate)}</TableCell>
+                                <TableCell>{c.endDate ? formatDate(c.endDate) : '-'}</TableCell>
                                 <TableCell>
                                     <Button size="small" onClick={() => navigate(`/admin/signup-bonus/${c.id}`)}>Ko‘rish</Button>
                                     {c.isActive && (
