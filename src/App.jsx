@@ -9,6 +9,7 @@ import AreaPage from "./pages/area";
 import LoginPage from "./pages/auth/login";
 import CategoryPage from "./pages/categories";
 import Dashboard from "./pages/dashboard";
+import FinanceStats from "./pages/finance";
 import InnerCategoriesPage from "./pages/inner-category";
 import JobTypes from "./pages/job-types";
 import Region from "./pages/region";
@@ -40,6 +41,7 @@ function App() {
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="finance" element={<FinanceStats />} />
           <Route path="region" element={<Region />} />
           <Route path="region/:regionId" element={<AreaPage />} />
           <Route path="areas" element={<AreaPage />} />

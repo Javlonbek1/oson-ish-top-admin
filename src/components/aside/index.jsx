@@ -1,5 +1,4 @@
-import { Dashboard } from "@mui/icons-material";
-import { CardGiftcard } from "@mui/icons-material";
+import { AttachMoney, CardGiftcard, Dashboard } from "@mui/icons-material";
 import { BiCategory } from "react-icons/bi";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GrAnnounce } from "react-icons/gr";
@@ -18,6 +17,11 @@ export default function Aside({ open }) {
       path: "/dashboard",
       label: "Dashboard",
       icon: <Dashboard size={20} />,
+    },
+    {
+      path: "/finance",
+      label: "Finance",
+      icon: <AttachMoney size={20} />,
     },
     {
       path: "/region",
@@ -101,8 +105,8 @@ export default function Aside({ open }) {
                   <>
                     <div
                       className={`p-1.5 rounded-lg transition-colors ${isActive
-                          ? "bg-white text-blue-600"
-                          : "text-blue-500 bg-blue-100 group-hover:bg-white group-hover:text-blue-600"
+                        ? "bg-white text-blue-600"
+                        : "text-blue-500 bg-blue-100 group-hover:bg-white group-hover:text-blue-600"
                         } ${open ? "mx-auto" : ""}`}
                     >
                       {item.icon}

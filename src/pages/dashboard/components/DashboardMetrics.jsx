@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { AlertTriangle, BarChart3, CalendarDays, CalendarRange, Download, Moon, PieChart, RefreshCcw, Sun, TrendingDown, TrendingUp, Users } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import StatsLineChart from "./StatsLineChart";
 
