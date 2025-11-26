@@ -19,6 +19,7 @@ import UserPage from "./pages/single-user";
 import UsersPage from "./pages/users";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SaveLastPage from "./routes/SaveLastPage";
+import VersionPage from "./pages/version";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="finance" element={<FinanceStats />} />
+          <Route path="version" element={<VersionPage />} />
           <Route path="region" element={<Region />} />
           <Route path="region/:regionId" element={<AreaPage />} />
           <Route path="areas" element={<AreaPage />} />

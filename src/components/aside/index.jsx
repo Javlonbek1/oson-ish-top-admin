@@ -4,7 +4,7 @@ import { FaMapLocationDot } from "react-icons/fa6";
 import { GrAnnounce } from "react-icons/gr";
 import { MdOutlineWorkHistory } from "react-icons/md";
 import { PiMapPinSimpleAreaBold, PiUsersThreeDuotone } from "react-icons/pi";
-import { RiAdvertisementLine } from "react-icons/ri";
+import { RiAdvertisementLine, RiRefreshLine } from "react-icons/ri";
 import { SlBriefcase } from "react-icons/sl";
 import { NavLink } from "react-router-dom";
 
@@ -78,6 +78,11 @@ export default function Aside({ open }) {
       path: "/advertisement",
       label: "Reklamalar",
       icon: <RiAdvertisementLine size={20} />,
+    },
+    {
+      path: "/version",
+      label: "Versiyalar",
+      icon: <RiRefreshLine size={20} />,
     },
   ];
 
