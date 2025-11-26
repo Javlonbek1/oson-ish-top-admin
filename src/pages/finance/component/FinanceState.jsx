@@ -15,6 +15,11 @@ const MOCK_DATA = {
     total: { in: 980, grossOut: 660, netOut: 320, payMe: 225, click: 260, paynet: 92, cash: 403, bonus: 0, returned: 300, refundRatePercent: 45.5 }
 };
 
+const months = [
+    "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+    "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+];
+
 const FinanceStats = ({
     baseUrl = '/api/v1/finance',
     initialYear = new Date().getFullYear(),
@@ -212,26 +217,32 @@ const FinanceStats = ({
                             aria-label="Month filter"
                         >
                             <option value="">All</option>
-                            {[...Array(12)].map((_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            {months.map((month, i) => (
+                                <option key={i + 1} value={i + 1}>
+                                    {month}
+                                </option>
                             ))}
                         </select>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium mb-2">Day (optional)</label>
-                        <select
+                        <input
+                            type="number"
                             value={filters.day || ''}
-                            onChange={(e) => setFilters({ ...filters, day: e.target.value ? parseInt(e.target.value) : null })}
+                            onChange={(e) =>
+                                setFilters({
+                                    ...filters,
+                                    day: e.target.value ? parseInt(e.target.value, 10) : null
+                                })
+                            }
                             disabled={!filters.month}
+                            min={1}
+                            max={31}
+                            placeholder="Day"
                             className="w-full px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                             aria-label="Day filter"
-                        >
-                            <option value="">All</option>
-                            {[...Array(31)].map((_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                            ))}
-                        </select>
+                        />
                     </div>
 
                     <div className="flex items-end gap-2">
@@ -260,13 +271,27 @@ const FinanceStats = ({
                 <>
                     {/* KPI Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-white p-6 rounded-lg shadow">
+                        {/* <div className="bg-white p-6 rounded-lg shadow">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm text-gray-600">Total In</span>
                                 <TrendingUp className="text-green-600" size={20} />
                             </div>
                             <div className="text-2xl font-bold text-green-600">{formatCurrency(data.total.in)}</div>
+                        </div> */}
+
+                        <div className="bg-white p-6 rounded-lg shadow">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm text-gray-600">Total In</span>
+                                <TrendingUp className="text-green-600" size={20} />
+                            </div>
+                            <div className="
+                                text-2xl font-bold text-green-600 
+                                overflow-hidden text-ellipsis whitespace-nowrap
+                            ">
+                                {formatCurrency(data.total.in)}
+                            </div>
                         </div>
+
 
                         <div className="bg-white p-6 rounded-lg shadow">
                             <div className="flex items-center justify-between mb-2">
