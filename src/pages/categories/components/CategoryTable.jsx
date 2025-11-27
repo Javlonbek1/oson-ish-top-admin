@@ -35,6 +35,7 @@ const CategoryTable = ({ categories, handleEdit, handleDelete }) => {
             <th className="px-2 py-2">Sarlavhasi (Uz)</th>
             <th className="px-2 py-2">Sarlavhasi (Ru)</th>
             <th className="px-2 py-2">Sarlavhasi (En)</th>
+            <th className="px-2 py-2">Order</th>
             <th className="px-2 py-2 text-center">Boshqarish</th>
           </tr>
         </thead>
@@ -60,6 +61,7 @@ const CategoryTable = ({ categories, handleEdit, handleDelete }) => {
                 <td className="px-2 py-2">{category.nameUz}</td>
                 <td className="px-2 py-2">{category.nameRu}</td>
                 <td className="px-2 py-2">{category.nameEn}</td>
+                <td className="px-2 py-2">{category.ordering}</td>
                 <td
                   className="px-2 py-2 flex gap-3 justify-center relative"
                   onClick={(e) => e.stopPropagation()}

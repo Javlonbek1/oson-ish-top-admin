@@ -111,6 +111,7 @@ const CategoryPage = () => {
       nameUz: category.nameUz,
       nameEn: category.nameEn,
       nameRu: category.nameRu,
+      ordering: category.ordering,
     });
     setIsModalOpen(true);
   };

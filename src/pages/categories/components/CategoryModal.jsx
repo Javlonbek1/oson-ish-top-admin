@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import Modal from "./Modal";
 
 const CategoryModal = memo(
@@ -41,6 +41,16 @@ const CategoryModal = memo(
               type="text"
               value={form.nameEn}
               onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
+              className="outline-none border px-3 py-2 rounded w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className=" block text-sm font-medium mb-1">Order Number</label>
+            <input
+              type="number"
+              value={form.ordering}
+              onChange={(e) => setForm({ ...form, ordering: e.target.value })}
               className="outline-none border px-3 py-2 rounded w-full"
               required
             />
