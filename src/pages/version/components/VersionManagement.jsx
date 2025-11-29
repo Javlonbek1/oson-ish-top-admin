@@ -79,7 +79,8 @@ const VersionManagement = ({ baseUrl = '', axiosInstance }) => {
     };
 
     // Handle form submission
-    const handleCreateVersion = async () => {
+    const handleCreateVersion = async (e) => {
+        e.preventDefault();
         if (!ax) {
             setError('Axios instance topilmadi');
             return;
@@ -96,9 +97,7 @@ const VersionManagement = ({ baseUrl = '', axiosInstance }) => {
         try {
             const res = await ax.post(`${API_BASE_URL}/version`, formData);
 
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error(`API failed: HTTP ${res.status}`);
-            }
+            if (res.status !== 200 && res.status !== 201) throw new Error(`API failed: HTTP ${res.status}`);
 
             const result = res.data;
 

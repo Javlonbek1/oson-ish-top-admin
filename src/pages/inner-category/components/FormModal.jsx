@@ -65,6 +65,18 @@ const FormModal = ({
               required
             />
           </div>
+          <div>
+            <label className=" outline-none block text-sm mb-1">Order Number</label>
+            <input
+              type="number"
+              value={form.ordering}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, ordering: e.target.value }))
+              }
+              className="outline-none w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
 
           <div className=" outline-none flex justify-end gap-2 pt-2">
             <button

@@ -111,6 +111,7 @@ const InnerCategoriesPage = () => {
       nameUz: cat?.nameUz || "",
       nameRu: cat?.nameRu || "",
       nameEn: cat?.nameEn || "",
+      ordering: cat?.ordering || 0,
     });
     setOpenForm(true);
   };
@@ -120,6 +121,7 @@ const InnerCategoriesPage = () => {
       nameUz: form.nameUz,
       nameEn: form.nameEn,
       nameRu: form.nameRu,
+      ordering: form.ordering,
       parentId: parentIdNum,
     };
     if (editing?.id) {
