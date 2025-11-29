@@ -95,7 +95,7 @@ const VersionManagement = ({ baseUrl = '', axiosInstance }) => {
         setError(null);
 
         try {
-            const res = await ax.post(`${API_BASE_URL}/version`, formData);
+            const res = await ax.post(`${API_BASE_URL}/version`, null, { params: formData });
 
             if (res.status !== 200 && res.status !== 201) throw new Error(`API failed: HTTP ${res.status}`);
 
