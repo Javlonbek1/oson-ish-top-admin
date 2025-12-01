@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiEdit, FiEye, FiMoreVertical, FiX } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { baseURL } from "../../../api/path";
@@ -47,6 +47,7 @@ const AddsTable = ({
                 <tr
                   key={ad.id}
                   className="hover:bg-gray-200 text-[12px] md:text-[14px] relative"
+                  onClick={() => console.log("test click")}
                 >
                   <td className="px-2 py-2">{(page - 1) * size + idx + 1}</td>
                   <td className="px-2 py-2">

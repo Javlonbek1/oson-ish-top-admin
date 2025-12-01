@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "../../api/axiosInstance";
-import { FiEdit } from "react-icons/fi";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { FaWifi } from "react-icons/fa6";
 import { FaSync } from "react-icons/fa";
-import AddsTable from "./components/AddsTable";
+import { FaWifi } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import axiosInstance from "../../api/axiosInstance";
 import { baseURL } from "../../api/path";
+import AddsTable from "./components/AddsTable";
 
 // ===== API =====
 const getAds = async ({ queryKey }) => {
