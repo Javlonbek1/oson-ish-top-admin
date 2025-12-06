@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiEdit, FiEye, FiMoreVertical, FiX } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { baseURL } from "../../../api/path";
+import { useNavigate } from "react-router-dom";
 
 const AddsTable = ({
   items,
@@ -11,6 +12,7 @@ const AddsTable = ({
   handleDelete,
   handleEdit,
 }) => {
+  const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null); // qaysi row ochilganini saqlash
   const [selectedAd, setSelectedAd] = useState(null); // ad detail modal
   const [selectedImage, setSelectedImage] = useState(null); // image modal uchun
@@ -47,7 +49,7 @@ const AddsTable = ({
                 <tr
                   key={ad.id}
                   className="hover:bg-gray-200 text-[12px] md:text-[14px] relative"
-                  onClick={() => console.log("test click")}
+                  onClick={() => navigate(`/ads-stats/${ad.id}`)}
                 >
                   <td className="px-2 py-2">{(page - 1) * size + idx + 1}</td>
                   <td className="px-2 py-2">
@@ -60,9 +62,8 @@ const AddsTable = ({
                   </td>
                   <td className="px-2 py-2">{ad.link || "-"}</td>
                   <td
-                    className={`px-2 py-2 font-semibold ${
-                      isAdActive(ad) ? "text-green-600" : "text-red-600"
-                    }`}
+                    className={`px-2 py-2 font-semibold ${isAdActive(ad) ? "text-green-600" : "text-red-600"
+                      }`}
                   >
                     {isAdActive(ad) ? "Active" : "Inactive"}
                   </td>
