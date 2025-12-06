@@ -123,7 +123,7 @@ const AnnounceCard = ({ ann, navigate }) => {
   {/* Modal */}
   {selectedFilter && (
   <div
-    className="fixed inset-0 bg-black/20 flex z-[201] items-center justify-center z-50"
+    className="fixed inset-0 bg-black/20 flex z-[201] items-center justify-center"
     onClick={() => setSelectedFilter(null)}
   >
     <div

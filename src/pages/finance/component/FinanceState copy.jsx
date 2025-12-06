@@ -123,18 +123,12 @@ const FinanceStats = ({
 
         return data.periods.map(p => ({
             period: p.period,
-            In: Number(p.summary.in),
-            'Gross Out': Number(p.summary.grossOut),
-            'Net Out': Number(p.summary.netOut),
-            'Pay Me': Number(p.summary.payMe),
-            Click: Number(p.summary.click),
-            Paynet: Number(p.summary.paynet),
-            Cash: Number(p.summary.cash),
-            Bonus: Number(p.summary.bonus),
-            Returned: Number(p.summary.returned),
+            In: p.summary.in,
+            'Gross Out': p.summary.grossOut,
+            'Net Out': p.summary.netOut,
+            Returned: p.summary.returned
         }));
     }, [data]);
-
 
     const exportCSV = () => {
         if (!data) return;
@@ -324,113 +318,96 @@ const FinanceStats = ({
                             <div className="text-2xl font-bold text-gray-800">{data.total.refundRatePercent.toFixed(1)}%</div>
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-lg font-semibold">Trend Analysis</h3>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => setChartType('line')}
-                                    className={`px-3 py-1 rounded ${chartType === 'line' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                                >
-                                    Line
-                                </button>
-                                <button
-                                    onClick={() => setChartType('bar')}
-                                    className={`px-3 py-1 rounded ${chartType === 'bar' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                                >
-                                    Bar
-                                </button>
+
+                    {/* Main Content */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Chart */}
+                        <div className="bg-white p-6 rounded-lg shadow">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-semibold">Trend Analysis</h3>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setChartType('line')}
+                                        className={`px-3 py-1 rounded ${chartType === 'line' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                                    >
+                                        Line
+                                    </button>
+                                    <button
+                                        onClick={() => setChartType('bar')}
+                                        className={`px-3 py-1 rounded ${chartType === 'bar' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                                    >
+                                        Bar
+                                    </button>
+                                </div>
                             </div>
+
+                            <ResponsiveContainer width="100%" height={300}>
+                                {chartType === 'line' ? (
+                                    <LineChart data={chartData} onMouseMove={(e) => e.activeLabel && setHoveredPeriod(e.activeLabel)} onMouseLeave={() => setHoveredPeriod(null)}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="period" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="In" stroke="#10b981" strokeWidth={2} />
+                                        <Line type="monotone" dataKey="Gross Out" stroke="#3b82f6" strokeWidth={2} />
+                                        <Line type="monotone" dataKey="Net Out" stroke="#ef4444" strokeWidth={2} />
+                                        <Line type="monotone" dataKey="Returned" stroke="#6b7280" strokeWidth={2} />
+                                    </LineChart>
+                                ) : (
+                                    <BarChart data={chartData} onMouseMove={(e) => e.activeLabel && setHoveredPeriod(e.activeLabel)} onMouseLeave={() => setHoveredPeriod(null)}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="period" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="In" fill="#10b981" />
+                                        <Bar dataKey="Gross Out" fill="#3b82f6" />
+                                        <Bar dataKey="Net Out" fill="#ef4444" />
+                                        <Bar dataKey="Returned" fill="#6b7280" />
+                                    </BarChart>
+                                )}
+                            </ResponsiveContainer>
                         </div>
 
-                        <ResponsiveContainer width="100%" height={360}>
-                            {chartType === 'line' ? (
-                                <LineChart
-                                    data={chartData}
-                                    onMouseMove={(e) => e?.activeLabel && setHoveredPeriod(e.activeLabel)}
-                                    onMouseLeave={() => setHoveredPeriod(null)}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="period" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-
-                                    {/* 9 ta line */}
-                                    <Line type="monotone" dataKey="In" stroke="#10b981" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Gross Out" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Net Out" stroke="#ef4444" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Pay Me" stroke="#8b5cf6" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Click" stroke="#f97316" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Paynet" stroke="#14b8a6" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Cash" stroke="#eab308" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Bonus" stroke="#6366f1" strokeWidth={2} dot={false} />
-                                    <Line type="monotone" dataKey="Returned" stroke="#6b7280" strokeWidth={2} dot={false} />
-                                </LineChart>
-                            ) : (
-                                <BarChart
-                                    data={chartData}
-                                    onMouseMove={(e) => e?.activeLabel && setHoveredPeriod(e.activeLabel)}
-                                    onMouseLeave={() => setHoveredPeriod(null)}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="period" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-
-                                    {/* 9 ta bar */}
-                                    <Bar dataKey="In" stackId="a" fill="#10b981" />
-                                    <Bar dataKey="Gross Out" stackId="a" fill="#3b82f6" />
-                                    <Bar dataKey="Net Out" stackId="a" fill="#ef4444" />
-                                    <Bar dataKey="Pay Me" stackId="a" fill="#8b5cf6" />
-                                    <Bar dataKey="Click" stackId="a" fill="#f97316" />
-                                    <Bar dataKey="Paynet" stackId="a" fill="#14b8a6" />
-                                    <Bar dataKey="Cash" stackId="a" fill="#eab308" />
-                                    <Bar dataKey="Bonus" stackId="a" fill="#6366f1" />
-                                    <Bar dataKey="Returned" stackId="a" fill="#6b7280" />
-                                </BarChart>
-                            )}
-                        </ResponsiveContainer>
-                    </div>
-
-                    {/* Period Table */}
-                    <div className="bg-white p-6 rounded-lg shadow overflow-auto mt-5" style={{ maxHeight: '400px' }}>
-                        <h3 className="text-lg font-semibold mb-4">Period Breakdown</h3>
-                        <table className="w-full text-sm">
-                            <thead className="bg-gray-100 sticky top-0">
-                                <tr>
-                                    <th className="p-2 text-left cursor-pointer hover:bg-gray-200" onClick={() => handleSort('period')}>
-                                        Period {sortColumn === 'period' && (sortDirection === 'asc' ? '↑' : '↓')}
-                                    </th>
-                                    <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('in')}>
-                                        In {sortColumn === 'in' && (sortDirection === 'asc' ? '↑' : '↓')}
-                                    </th>
-                                    <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('netOut')}>
-                                        Net {sortColumn === 'netOut' && (sortDirection === 'asc' ? '↑' : '↓')}
-                                    </th>
-                                    <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('refundRatePercent')}>
-                                        Refund% {sortColumn === 'refundRatePercent' && (sortDirection === 'asc' ? '↑' : '↓')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sortedPeriods.map((p) => (
-                                    <tr
-                                        key={p.period}
-                                        onClick={() => handlePeriodClick(p)}
-                                        className={`border-b hover:bg-blue-50 cursor-pointer transition ${hoveredPeriod === p.period ? 'bg-blue-100' : ''}`}
-                                    >
-                                        <td className="p-2 font-medium">{p.period}</td>
-                                        <td className="p-2 text-right text-green-600">{formatCurrency(p.summary.in)}</td>
-                                        <td className={`p-2 text-right ${p.summary.netOut < 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                            {formatCurrency(p.summary.netOut)}
-                                        </td>
-                                        <td className="p-2 text-right">{p.summary.refundRatePercent.toFixed(1)}%</td>
+                        {/* Period Table */}
+                        <div className="bg-white p-6 rounded-lg shadow overflow-auto" style={{ maxHeight: '400px' }}>
+                            <h3 className="text-lg font-semibold mb-4">Period Breakdown</h3>
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-100 sticky top-0">
+                                    <tr>
+                                        <th className="p-2 text-left cursor-pointer hover:bg-gray-200" onClick={() => handleSort('period')}>
+                                            Period {sortColumn === 'period' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                        </th>
+                                        <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('in')}>
+                                            In {sortColumn === 'in' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                        </th>
+                                        <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('netOut')}>
+                                            Net {sortColumn === 'netOut' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                        </th>
+                                        <th className="p-2 text-right cursor-pointer hover:bg-gray-200" onClick={() => handleSort('refundRatePercent')}>
+                                            Refund% {sortColumn === 'refundRatePercent' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                        </th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {sortedPeriods.map((p) => (
+                                        <tr
+                                            key={p.period}
+                                            onClick={() => handlePeriodClick(p)}
+                                            className={`border-b hover:bg-blue-50 cursor-pointer transition ${hoveredPeriod === p.period ? 'bg-blue-100' : ''}`}
+                                        >
+                                            <td className="p-2 font-medium">{p.period}</td>
+                                            <td className="p-2 text-right text-green-600">{formatCurrency(p.summary.in)}</td>
+                                            <td className={`p-2 text-right ${p.summary.netOut < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                {formatCurrency(p.summary.netOut)}
+                                            </td>
+                                            <td className="p-2 text-right">{p.summary.refundRatePercent.toFixed(1)}%</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </>
             ) : null}
