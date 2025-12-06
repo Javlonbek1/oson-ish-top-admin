@@ -20,6 +20,7 @@ import UsersPage from "./pages/users";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import SaveLastPage from "./routes/SaveLastPage";
 import VersionPage from "./pages/version";
+import Notification from "./pages/notification";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
           <Route path="users/:usersId" element={<UserPage />} />
           <Route path="ann-filters" element={<AnnouncementsPage />} />
           <Route path="ann-filters/:id" element={<AnnFilterDetail />} />
+          <Route path="notification" element={<Notification />} />
 
           <Route path="/admin/signup-bonus" element={<SignupBonusAdminPage />} />
           <Route path="/admin/signup-bonus/:id" element={<SignupBonusDetail />} />

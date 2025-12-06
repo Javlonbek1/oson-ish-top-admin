@@ -1,4 +1,4 @@
-import { AttachMoney, CardGiftcard, Dashboard } from "@mui/icons-material";
+import { AttachMoney, CardGiftcard, Dashboard, Notifications } from "@mui/icons-material";
 import { BiCategory } from "react-icons/bi";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { GrAnnounce } from "react-icons/gr";
@@ -38,11 +38,6 @@ export default function Aside({ open }) {
       label: "Kategoriyalar",
       icon: <BiCategory size={20} />,
     },
-    // {
-    //   path: "/inner-categories",
-    //   label: "Ichki kategoriyalar",
-    //   icon: <MdOutlineCategory size={20} />,
-    // },
     {
       path: "/announcement",
       label: "Elon turlari",
@@ -68,12 +63,6 @@ export default function Aside({ open }) {
       label: "E'lonlar",
       icon: <SlBriefcase size={20} />,
     },
-    // {
-    //   path: "/ann-discount",
-    //   label: "Chegirmalar",
-    //   icon: <MdOutlinePercent size={20} />,
-    // },
-
     {
       path: "/advertisement",
       label: "Reklamalar",
@@ -83,6 +72,11 @@ export default function Aside({ open }) {
       path: "/version",
       label: "Versiyalar",
       icon: <RiRefreshLine size={20} />,
+    },
+    {
+      path: "/notification",
+      label: "Notification",
+      icon: <Notifications size={20} />,
     },
   ];
 

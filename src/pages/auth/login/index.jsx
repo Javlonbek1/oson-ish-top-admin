@@ -20,6 +20,7 @@ const LoginPage = () => {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
+      console.log(data);
       localStorage.setItem("token", data?.data?.jwt);
       localStorage.setItem("roles", data?.data?.roles);
       navigate("/region");
