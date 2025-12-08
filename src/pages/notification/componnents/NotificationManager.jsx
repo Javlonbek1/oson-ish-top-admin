@@ -20,7 +20,7 @@ const DEFAULT_PAGE_INFO = {
     last: false,
 };
 
-export default function NotificationManager({ baseUrl = '', axiosInstance }) {
+export default function NotificationManager({ baseUrl = '/notification', axiosInstance }) {
     const API_BASE_URL = baseUrl;
     const ax = axiosInstance || (typeof window !== 'undefined' && window.axios);
 
@@ -50,7 +50,7 @@ export default function NotificationManager({ baseUrl = '', axiosInstance }) {
 
             try {
                 const params = { page, size };
-                const res = await ax.get(`${API_BASE_URL}/notification/all`, { params });
+                const res = await ax.get(`${API_BASE_URL}/all`, { params });
 
                 if (res.status !== 200) {
                     throw new Error(`API failed: HTTP ${res.status}`);
@@ -144,14 +144,6 @@ export default function NotificationManager({ baseUrl = '', axiosInstance }) {
             descriptionEn: formData.descriptionEn.trim(),
             status: formData.status,
         };
-
-        if (formData.usersId.trim()) {
-            payload.usersId = formData.usersId.trim();
-        }
-
-        if (formData.groupsId.trim()) {
-            payload.groupsId = parseInt(formData.groupsId.trim(), 10);
-        }
 
         try {
             const res = await ax.post(`${API_BASE_URL}/send`, payload);
