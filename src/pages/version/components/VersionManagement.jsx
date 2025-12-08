@@ -14,12 +14,12 @@ const VersionManagement = ({ baseUrl = '', axiosInstance }) => {
 
     // Form state
     const [formData, setFormData] = useState({
-        titleUz: '',
-        titleEn: '',
-        titleRu: '',
-        descriptionUz: '',
-        descriptionEn: '',
-        descriptionRu: '',
+        titleUz: 'Ilova yangilandi!',
+        titleEn: 'The app has been updated!',
+        titleRu: 'Приложение обновлено!',
+        descriptionUz: 'Sizning ilovangiz yangi versiyaga yangilandi. Iltimos, yangi imkoniyatlardan foydalanish uchun ilovani oching va yangilang',
+        descriptionEn: 'Your app has been updated to a new version. Please open and update the app to take advantage of the new features.',
+        descriptionRu: 'Ваше приложение обновлено до новой версии. Откройте и обновите приложение, чтобы воспользоваться новыми функциями.',
         andiroidVersion: '',
         andiroidIsUpdate: false,
         iosVersion: '',
