@@ -50,7 +50,7 @@ export default function NotificationManager({ baseUrl = '', axiosInstance }) {
 
             try {
                 const params = { page, size };
-                const res = await ax.get(`${API_BASE_URL}/all`, { params });
+                const res = await ax.get(`${API_BASE_URL}/notification/all`, { params });
 
                 if (res.status !== 200) {
                     throw new Error(`API failed: HTTP ${res.status}`);

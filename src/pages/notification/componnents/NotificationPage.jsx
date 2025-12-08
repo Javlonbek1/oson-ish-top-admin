@@ -17,7 +17,10 @@ const truncateText = (text, maxLength) => {
     return text.substring(0, maxLength) + '...';
 };
 
-const NotificationPage = () => {
+const NotificationPage = ({ baseUrl = '', axiosInstance }) => {
+    const API_BASE_URL = baseUrl;
+    const ax = axiosInstance || window.axios;
+
     // --- State for Create Notification Form ---
     const initialFormState = {
         titleUz: '',
@@ -84,34 +87,51 @@ const NotificationPage = () => {
     };
 
     // Fetch notifications function (memoized to avoid dependency loop in useEffect)
-    const fetchNotifications = useCallback(async (page) => {
-        setListLoading(true);
-        setListError('');
-        try {
-            const response = await fetch(`${BASE_URL}/all?page=${page}&size=${PAGE_SIZE}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    const fetchNotifications = useCallback(
+        async (page) => {
+            if (!ax) {
+                setListError('Axios instance topilmadi');
+                return;
             }
-            const result = await response.json();
 
-            if (result.success && result.data) {
-                setNotifications(result.data.content || []);
-                setTotalPages(result.data.totalPages || 0);
-                setCurrentPage(result.data.number || 0);
-            } else {
+            setListLoading(true);
+            setListError('');
+
+            try {
+                const params = {
+                    page: page,
+                    size: PAGE_SIZE,
+                };
+
+                const res = await ax.get(`${API_BASE_URL}/all`, { params });
+
+                if (res.status !== 200) {
+                    throw new Error(`HTTP error: ${res.status}`);
+                }
+
+                const result = res.data;
+
+                if (result.success && result.data) {
+                    setNotifications(result.data.content || []);
+                    setTotalPages(result.data.totalPages || 0);
+                    setCurrentPage(result.data.number || 0);
+                } else {
+                    setNotifications([]);
+                    setTotalPages(0);
+                    setListError(result.message || 'Failed to fetch notifications data.');
+                }
+            } catch (error) {
+                console.error('Axios fetch error:', error);
+                setListError('Error fetching notifications: ' + (error?.message || 'Unknown error'));
                 setNotifications([]);
                 setTotalPages(0);
-                setListError(result.message || 'Failed to fetch notifications data.');
+            } finally {
+                setListLoading(false);
             }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            setListError(`Error fetching notifications: ${error.message}`);
-            setNotifications([]);
-            setTotalPages(0);
-        } finally {
-            setListLoading(false);
-        }
-    }, []);
+        },
+        [ax, API_BASE_URL, PAGE_SIZE]
+    );
+
 
     // Initial load and whenever the current page changes
     useEffect(() => {
