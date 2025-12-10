@@ -183,7 +183,7 @@ const FinanceStats = ({
     };
 
     const formatCurrency = (value) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(value);
+        return new Intl.NumberFormat('uz-UZ', { style: 'currency', currency: 'UZS', minimumFractionDigits: 0 }).format(value);
     };
 
     if (error) {
